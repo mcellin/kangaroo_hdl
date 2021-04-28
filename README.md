@@ -102,5 +102,5 @@ lvd2 - *AY-3-8910 Core* (GPL 3.0) - https://github.com/lvd2/ay-3-8910_reverse_en
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
