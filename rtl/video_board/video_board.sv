@@ -1,0 +1,692 @@
+/*#########################################################################
+#File Name:     video_board.sv
+#Description:   Representation connecting all Video PCB schematic components. 
+#				Kangaroo Schematic Package Supplement Sheets 8B, 9A, 9B, 10A,
+#				10B, 11A, and 11B.            
+#
+#Date:          
+#Programmer:    Jonathon McEllin, S00150412
+#Version:       Rev. 1.00
+#
+#Notes:         
+##########################################################################*/
+
+module video_board(
+	/*-------------------------------------------------------------- /
+	/ --------------------- Inputs and Outputs --------------------- /
+	/ --------------------------------------------------------------*/
+	
+	/* -> CPU Board */
+	inout [50:1] CN1,
+	inout [20:1] CN4,
+
+	input wire CLOCK_10MHZ
+);
+
+
+	/*-------------------------------------------------------------- /
+	/ --------------------- Nets and Registers --------------------- /
+	/-------------------------------------------------------------- */
+
+	/* -> Video Board */
+	/* -> Clock Sync Chain and Timing Signals */
+	wire SFT_AL, KOS1, KIS1_AL, K1_AL, RAS, CAS, XG, LD_SFT_AL, K2, K2_AL, VSYNC_AL, AV6_TICK_AL, TRGA_AL, AV14, AV13, AV12, AV11, AV10, AV9, AV8, AV7, AV6, AV6_TICK, AV5, AV4, AV3, AV2, AV1, AV0, IC7_11_TO_IC7_12_AND_IC17_1, IC6_9_TO_IC17_3, IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1, IC6_5_TO_IC19_5_AND_IC19_10, IC7_2_TO_IC6_11_AND_IC19_9, IC20_3_TO_IC23_2_AND_IC23_12, IC20_6_TO_IC11_1_AND_IC21_2_AND_IC21_12, IC9_9_TO_IC20_9, IC11_4_TO_IC20_10, IC7_10_TO_IC5_12_AND_IC30_2, IC30_3_TO_IC7_5;
+
+	/* -> DMA Control */
+	wire LDL_AL, EXCT, EXCT_AL, EXCT_RB, EXCT_SB, IC28_5_TO_IC19_13_AND_IC27_1_AND_IC27_13, IC28_8_TO_IC19_12_AND_IC27_2_AND_IC27_10_AND_IC27_12, IC27_8_TO_IC41_10, IC41_9_TO_IC28_1, IC102_15_TO_IC90_12_AND_IC116_10, IC28_9_TO_IC90_13;
+
+	/* -> Dynamic Ram Address from CPU and for DMA */
+	wire ABX13, ABX12, ABX11, ABX10, ABX9, ABX8, ABX7, ABX6, ABX5, ABX4, ABX3, ABX2, ABX1, ABX0, IC1_14_TO_IC12_3, IC1_13_TO_IC12_6, IC19_3_TO_IC1_7_AND_IC2_7;
+
+	/* -> Dynamic Ram Address Selector */
+	wire AVAX13, AVAX12, AVAX11, AVAX10, AVAX9, AVAX8, AVAX7, AVAX6, AVAX5, AVAX4, AVAX3, AVAX2, AVAX1, AVAX0, AVBX13, AVBX12, AVBX11, AVBX10, AVBX9, AVBX8, AVBX7, AVBX6, AVBX5, AVBX4, AVBX3, AVBX2, AVBX1, AVBX0, XXA6, XXA5, XXA4, XXA3, XXA2, XXA1, XXA0, XXB6, XXB5, XXB4, XXB3, XXB2, XXB1, XXB0, WE, IC17_8_TO_IC42_2_AND_IC43_2_AND_IC44_2_AND_IC45_2_AND_IC46_2_AND_IC47_2_AND_IC48_2_AND_IC49_2;
+
+	/* -> Dynamic Ram Control and Address Decoding */
+	wire BSEL0, BSEL2, CSC000_AL, IC118_6_TO_IC20_12, IC133_6_TO_IC20_13, IC131_12_TO_IC90_1_AND_IC131_3, IC104_6_TO_IC91_9, IC91_8_TO_IC104_12, IC104_8_TO_IC91_11, IC91_10_TO_IC104_1, IC91_12_TO_IC118_4_AND_IC133_11, IC117_2_TO_IC131_1, IC117_3_TO_IC133_4, IC117_6_TO_IC133_9, IC117_8_TO_IC131_11, IC132_5_TO_IC118_5_AND_IC133_10;
+
+	/* -> Dynamic Ram Data Selector */
+	wire DPR3, DPR2, DPR1, DPR0, DPG3, DPG2, DPG1, DPG0, DPB3, DPB2, DPB1, DPB0, DPZ3, DPZ2, DPZ1, DPZ0, DXR3, DXR2, DXR1, DXR0, DXG3, DXG2, DXG1, DXG0, DXB3, DXB2, DXB1, DXB0, DXZ3, DXZ2, DXZ1, DXZ0, ARHF, AGHF, ABHF, BRHF, BGHF, BBHF, SEL_I_II_AL_A, SEL_I_II_AL_B, ENA, ENB, PRIA_AL, PRIB_AL, IC17_6_TO_IC29_11_AND_IC31_11,IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13, IC90_6_TO_IC31_4, IC118_3_TO_IC31_5;
+
+	/* -> Dynamic Ram Video Address and Flip */
+	wire BCAS0_AL, BCAS1_AL, BRAS0_AL, BRAS1_AL, BWE0_AL, BWE1_AL, BRHF_AL, BGHF_AL, BBHF_AL, AY_AL, BVR, BVG, BVB, BY_AL, IC117_12_TO_IC111_1_AND_IC112_1_AND_IC113_1_AND_IC114_1, IC139_6_TO_IC111_15_AND_IC112_15_AND_IC113_15_AND_IC114_15, IC139_3_TO_IC141_2_AND_IC141_3_AND_IC141_11;
+
+	/* -> Picture ROM */
+	wire ABP12, ABP11, ABP10, ABP9, ABP8, ABP7, ABP6, ABP5, ABP4, ABP3, ABP2, ABP1, ABP0, IC89_3_TO_IC39_1_AND_IC40_1, IC90_8_TO_IC89_1_AND_IC91_5, IC91_2_TO_IC53_18_AND_IC53_20_AND_IC77_18_AND_IC77_20,IC91_6_TO_IC89_12;
+
+	/* -> Picture ROM Address Selector */
+	wire ACAS0_AL, ACAS1_AL, ARAS0_AL, ARAS1_AL, AWE0_AL, AWE1_AL, ARHF_AL, AGHF_AL, ABHF_AL, AVR, AVG, AVB, IC117_10_TO_IC107_1_AND_IC108_1_AND_IC109_1_AND_IC110_1, IC139_8_TO_IC107_15_AND_IC108_15_AND_IC109_15_AND_IC110_15, IC139_11_TO_IC137_2_AND_IC137_3_AND_IC137_11, IC118_8_TO_IC135_12_AND_IC135_13, IC41_5_TO_IC12_10, IC17_2_TO_IC17_13, IC90_3_TO_IC91_13, IC90_11_TO_IC118_12;
+
+
+	/*-------------------------------------------------------------- /
+	/ --------------------- Module Instantiation ------------------- /
+	/ --------------------------------------------------------------*/
+
+	/* -> Clock Sync Chain and Timing Signals */
+	video_clock_sync_chain_and_timing_signals video_clock_sync_chain_and_timing_signals(
+		.CLOCK_10MHZ(CLOCK_10MHZ),
+		.SFT_AL(SFT_AL), 		/* Driven by IC17 */
+		.KOS1(KOS1),
+		.KIS1_AL(KIS1_AL),
+		.K1_AL(K1_AL), 			/* Driven by IC17 */
+		.RAS(RAS), 				/* Driven by IC19 */
+		.CAS(CAS),
+		.XG(XG), 				/* Driven by IC19 */
+		.LD_SFT_AL(LD_SFT_AL), 	/* Driven by IC20 */
+		.K2(K2),
+		.K2_AL(K2_AL), 			/* Driven by IC17 */
+		.CPU_CLOCK(CN1[47]),
+		.VSYNC_AL(VSYNC_AL),
+		.AV6_TICK_AL(AV6_TICK_AL),
+		.TRGA_AL(TRGA_AL),
+		.INT_AL(CN1[42]),
+		.AV14(AV14),
+		.AV13(AV13),
+		.AV12(AV12),
+		.AV11(AV11),
+		.AV10(AV10),
+		.AV9(AV9),
+		.AV8(AV8),
+		.AV7(AV7),
+		.AV6(AV6),
+		.AV6_TICK(AV6_TICK),
+		.AV5(AV5),
+		.AV4(AV4),
+		.AV3(AV3),
+		.AV2(AV2),
+		.AV1(AV1),
+		.AV0(AV0),
+		
+		/* -> External Shared Logic */
+		.IC7_11_TO_IC7_12_AND_IC17_1(IC7_11_TO_IC7_12_AND_IC17_1),
+		.IC6_9_TO_IC17_3(IC6_9_TO_IC17_3),
+		.IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1(IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1),
+		.IC6_5_TO_IC19_5_AND_IC19_10(IC6_5_TO_IC19_5_AND_IC19_10),
+		.IC7_2_TO_IC6_11_AND_IC19_9(IC7_2_TO_IC6_11_AND_IC19_9),
+		.IC20_3_TO_IC23_2_AND_IC23_12(IC20_3_TO_IC23_2_AND_IC23_12),
+		.IC20_6_TO_IC11_1_AND_IC21_2_AND_IC21_12(IC20_6_TO_IC11_1_AND_IC21_2_AND_IC21_12),
+		.IC9_9_TO_IC20_9(IC9_9_TO_IC20_9),
+		.IC11_4_TO_IC20_10(IC11_4_TO_IC20_10),	
+		.IC7_10_TO_IC5_12_AND_IC30_2(IC7_10_TO_IC5_12_AND_IC30_2),
+		.IC30_3_TO_IC7_5(IC30_3_TO_IC7_5)
+	);
+
+	/* -> DMA Control */
+	video_dma_control dma_control(
+		.XYL_AL(CN1[6]),
+		.XYH_AL(CN1[7]),
+		.KIS1_AL(KIS1_AL),
+		.K1_AL(K1_AL),
+		.K2(K2),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.LDL_AL(LDL_AL), 	/* Driven by IC118 */
+		.EXCT(EXCT),
+		.EXCT_AL(EXCT_AL), 	/* Driven by IC19 */
+		.EXCT_RB(EXCT_RB),
+		.EXCT_SB(EXCT_SB),
+		
+		/* -> External Shared Logic */
+		.IC28_5_TO_IC19_13_AND_IC27_1_AND_IC27_13(IC28_5_TO_IC19_13_AND_IC27_1_AND_IC27_13),
+		.IC28_8_TO_IC19_12_AND_IC27_2_AND_IC27_10_AND_IC27_12(IC28_8_TO_IC19_12_AND_IC27_2_AND_IC27_10_AND_IC27_12),
+		.IC27_8_TO_IC41_10(IC27_8_TO_IC41_10),
+		.IC41_9_TO_IC28_1(IC41_9_TO_IC28_1),
+		.IC102_15_TO_IC90_12_AND_IC116_10(IC102_15_TO_IC90_12_AND_IC116_10),
+		.IC28_9_TO_IC90_13(IC28_9_TO_IC90_13)
+	);
+
+	/* -> Dynamic Ram Address from CPU and for DMA */
+	video_dynamic_ram_address_from_cpu_and_for_dma dynamic_ram_address_from_cpu_and_for_dma(
+		.WRH_AL(CN1[5]),
+		.LDL_AL(LDL_AL),
+		.WRL_AL(CN1[4]),
+		.AB13(CN1[34]),
+		.AB12(CN1[33]),
+		.AB11(CN1[32]),
+		.AB10(CN1[31]),
+		.AB9(CN1[30]),
+		.AB8(CN1[29]),
+		.AB7(CN1[28]),
+		.AB6(CN1[27]),
+		.AB5(CN1[26]),
+		.AB4(CN1[25]),
+		.AB3(CN1[24]),
+		.AB2(CN1[23]),
+		.AB1(CN1[22]),
+		.AB0(CN1[21]),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.K2(K2),
+		.EXCT_SB(EXCT_SB),
+		.K1_AL(K1_AL),
+		.ABX11(ABX11),
+		.ABX10(ABX10),
+		.ABX9(ABX9),
+		.ABX8(ABX8),
+		.ABX7(ABX7),
+		.ABX6(ABX6),
+		.ABX5(ABX5),
+		.ABX4(ABX4),
+		.ABX3(ABX3),
+		.ABX2(ABX2),
+		.ABX1(ABX1),
+		.ABX0(ABX0),
+		
+		/* -> External Shared Logic */
+		.IC1_14_TO_IC12_3(IC1_14_TO_IC12_3),
+		.IC1_13_TO_IC12_6(IC1_13_TO_IC12_6),
+		.IC19_3_TO_IC1_7_AND_IC2_7(IC19_3_TO_IC1_7_AND_IC2_7)
+	);
+
+	/* -> Dynamic Ram Address Selector */
+	video_dynamic_ram_address_selector dynamic_ram_address_selector(
+		.XG(XG),
+		.K2_AL(K2_AL),
+		.AVAX13(AVAX13),
+		.AVAX12(AVAX12),
+		.AVAX11(AVAX11),
+		.AVAX10(AVAX10),
+		.AVAX9(AVAX9),
+		.AVAX8(AVAX8),
+		.AVAX7(AVAX7),
+		.AVAX6(AVAX6),
+		.AVAX5(AVAX5),
+		.AVAX4(AVAX4),
+		.AVAX3(AVAX3),
+		.AVAX2(AVAX2),
+		.AVAX1(AVAX1),
+		.AVAX0(AVAX0),
+		.AVBX13(AVBX13),
+		.AVBX12(AVBX12),
+		.AVBX11(AVBX11),
+		.AVBX10(AVBX10),
+		.AVBX9(AVBX9),
+		.AVBX8(AVBX8),
+		.AVBX7(AVBX7),
+		.AVBX6(AVBX6),
+		.AVBX5(AVBX5),
+		.AVBX4(AVBX4),
+		.AVBX3(AVBX3),
+		.AVBX2(AVBX2),
+		.AVBX1(AVBX1),
+		.AVBX0(AVBX0),
+		.ABX13(ABX13),
+		.ABX12(ABX12),
+		.ABX11(ABX11),
+		.ABX10(ABX10),
+		.ABX9(ABX9),
+		.ABX8(ABX8),
+		.ABX7(ABX7),
+		.ABX6(ABX6),
+		.ABX5(ABX5),
+		.ABX4(ABX4),
+		.ABX3(ABX3),
+		.ABX2(ABX2),
+		.ABX1(ABX1),
+		.ABX0(ABX0),
+		.XXA6(XXA6),
+		.XXA5(XXA5),
+		.XXA4(XXA4),
+		.XXA3(XXA3),
+		.XXA2(XXA2),
+		.XXA1(XXA1),
+		.XXA0(XXA0),
+		.XXB6(XXB6),
+		.XXB5(XXB5),
+		.XXB4(XXB4),
+		.XXB3(XXB3),
+		.XXB2(XXB2),
+		.XXB1(XXB1),
+		.XXB0(XXB0),
+		.WE(WE),
+		
+		/* -> External Shared Logic */
+		.IC17_8_TO_IC42_2_AND_IC43_2_AND_IC44_2_AND_IC45_2_AND_IC46_2_AND_IC47_2_AND_IC48_2_AND_IC49_2(IC17_8_TO_IC42_2_AND_IC43_2_AND_IC44_2_AND_IC45_2_AND_IC46_2_AND_IC47_2_AND_IC48_2_AND_IC49_2)
+	);
+
+	/* -> Dynamic Ram Control and Address Decoding */
+	video_dynamic_ram_control_and_address_decoding dynamic_ram_control_and_address_decoding(
+		.BSEL(CN1[10]),
+		.RAS(RAS),
+		.CAS(CAS),
+		.WE(WE),
+		.K2_AL(K2_AL),
+		.EXCT(EXCT),
+		.EXCT_AL(EXCT_AL),
+		.MREQ_AL(CN1[37]),
+		.CS2_AL(CN1[1]),
+		.MW_AL(CN1[39]),
+		.AB15(CN1[36]),
+		.AB14(CN1[35]),
+		.AB13(CN1[34]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.ARAS1_AL(ARAS1_AL),
+		.ACAS1_AL(ACAS1_AL),
+		.AWE1_AL(AWE1_AL),
+		.ARAS0_AL(ARAS0_AL),
+		.ACAS0_AL(ACAS0_AL),
+		.AWE0_AL(AWE0_AL),
+		.BRAS1_AL(BRAS1_AL),
+		.BCAS1_AL(BCAS1_AL),
+		.BWE1_AL(BWE1_AL),
+		.BRAS0_AL(BRAS0_AL),
+		.BCAS0_AL(BCAS0_AL),
+		.BWE0_AL(BWE0_AL),
+		.BSEL0(BSEL0),
+		.BSEL2(BSEL2),
+		.CSC000_AL(CSC000_AL),
+		.WAIT_AL(CN1[41]), /* Driven by IC20 */
+		
+		/* -> External Shared Logic */
+		.IC133_6_TO_IC20_13(IC133_6_TO_IC20_13),
+		.IC131_12_TO_IC90_1_AND_IC131_3(IC131_12_TO_IC90_1_AND_IC131_3),
+		.IC104_6_TO_IC91_9(IC104_6_TO_IC91_9),
+		.IC91_8_TO_IC104_12(IC91_8_TO_IC104_12),
+		.IC104_8_TO_IC91_11(IC104_8_TO_IC91_11),
+		.IC91_10_TO_IC104_1(IC91_10_TO_IC104_1),
+		.IC91_12_TO_IC118_4_AND_IC133_11(IC91_12_TO_IC118_4_AND_IC133_11),
+		.IC117_2_TO_IC131_1(IC117_2_TO_IC131_1),
+		.IC117_3_TO_IC133_4(IC117_3_TO_IC133_4),
+		.IC117_6_TO_IC133_9(IC117_6_TO_IC133_9),
+		.IC117_8_TO_IC131_11(IC117_8_TO_IC131_11),
+		.IC132_5_TO_IC118_5_AND_IC133_10(IC132_5_TO_IC118_5_AND_IC133_10)
+	);
+
+	/* -> Dynamic Ram Data Selector */
+	video_dynamic_ram_data_selector_and_control_latches dynamic_ram_data_selector_and_control_latches(
+		.HFEN(CN1[12]),
+		.I_II_EN_PRI(CN1[11]),
+		.EXCT(EXCT),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.DPR3(DPR3),
+		.DPR2(DPR2),
+		.DPR1(DPR1),
+		.DPR0(DPR0),
+		.DPG3(DPG3),
+		.DPG2(DPG2),
+		.DPG1(DPG1),
+		.DPG0(DPG0),
+		.DPB3(DPB3),
+		.DPB2(DPB2),
+		.DPB1(DPB1),
+		.DPB0(DPB0),
+		.DPZ3(DPZ3),
+		.DPZ2(DPZ2),
+		.DPZ1(DPZ1),
+		.DPZ0(DPZ0),
+		.DXR3(DXR3),
+		.DXR2(DXR2),
+		.DXR1(DXR1),
+		.DXR0(DXR0),
+		.DXG3(DXG3),
+		.DXG2(DXG2),
+		.DXG1(DXG1),
+		.DXG0(DXG0),
+		.DXB3(DXB3),
+		.DXB2(DXB2),
+		.DXB1(DXB1),
+		.DXB0(DXB0),
+		.DXZ3(DXZ3),
+		.DXZ2(DXZ2),
+		.DXZ1(DXZ1),
+		.DXZ0(DXZ0),
+		.ARHF_AL(ARHF_AL),
+		.AGHF_AL(AGHF_AL),
+		.ABHF_AL(ABHF_AL),
+		.BRHF_AL(BRHF_AL),
+		.BGHF_AL(BGHF_AL),
+		.BBHF_AL(BBHF_AL),
+		.SEL_I_II_AL_A(SEL_I_II_AL_A),
+		.SEL_I_II_AL_B(SEL_I_II_AL_B),
+		.ENA(ENA),
+		.ENB(ENB),
+		.PRIA_AL(PRIA_AL),
+		.PRIB_AL(PRIB_AL)
+	);
+
+	/* -> Dynamic Ram Video Address and Flip */
+	video_dynamic_ram_video_address_and_flip dynamic_ram_video_address_and_flip(
+		.SEL_I_II_AL_A(SEL_I_II_AL_A),
+		.SEL_I_II_AL_B(SEL_I_II_AL_B),
+		.TRGA_AL(TRGA_AL),
+		.VPOS_AL(CN1[8]),
+		.AV14(AV14),
+		.AV13(AV13),
+		.AV12(AV12),
+		.AV11(AV11),
+		.AV10(AV10),
+		.AV9(AV9),
+		.AV8(AV8),
+		.AV7(AV7),
+		.AV6(AV6),
+		.AV5(AV5),
+		.AV4(AV4),
+		.AV3(AV3),
+		.AV2(AV2),
+		.AV1(AV1),
+		.AV0(AV0),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.AVAX13(AVAX13),
+		.AVAX12(AVAX12),
+		.AVAX11(AVAX11),
+		.AVAX10(AVAX10),
+		.AVAX9(AVAX9),
+		.AVAX8(AVAX8),
+		.AVAX7(AVAX7),
+		.AVAX6(AVAX6),
+		.AVAX5(AVAX5), /* Driven by IC30 */
+		.AVAX4(AVAX4), /* Driven by IC30 */
+		.AVAX3(AVAX3),
+		.AVAX2(AVAX2),
+		.AVAX1(AVAX1),
+		.AVAX0(AVAX0),
+		.AVBX13(AVBX13),
+		.AVBX12(AVBX12),
+		.AVBX11(AVBX11),
+		.AVBX10(AVBX10),
+		.AVBX9(AVBX9),
+		.AVBX8(AVBX8),
+		.AVBX7(AVBX7),
+		.AVBX6(AVBX6),
+		.AVBX5(AVBX5),
+		.AVBX4(AVBX4),
+		.AVBX3(AVBX3),
+		.AVBX2(AVBX2),
+		.AVBX1(AVBX1),
+		.AVBX0(AVBX0),
+		
+		/* -> External Shared Logic */
+		.IC17_6_TO_IC29_11_AND_IC31_11(IC17_6_TO_IC29_11_AND_IC31_11),
+		.IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13(IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13),
+		.IC90_6_TO_IC31_4(IC90_6_TO_IC31_4),
+		.IC118_3_TO_IC31_5(IC118_3_TO_IC31_5)
+	);
+	
+	/* -> Motion Object */
+	video_motion_object motion_object(
+		.SEL_I_II_AL_B(SEL_I_II_AL_B),
+		.AV6_TICK_AL(AV6_TICK_AL),
+		.ENB(ENB),
+		.SFT_AL(SFT_AL),
+		.BCAS0_AL(BCAS0_AL),
+		.BCAS1_AL(BCAS1_AL),
+		.BRAS0_AL(BRAS0_AL),
+		.BRAS1_AL(BRAS1_AL),
+		.BWE0_AL(BWE0_AL),
+		.BWE1_AL(BWE1_AL),
+		.XXB6(XXB6),
+		.XXB5(XXB5),
+		.XXB4(XXB4),
+		.XXB3(XXB3),
+		.XXB2(XXB2),
+		.XXB1(XXB1),
+		.XXB0(XXB0),
+		.DXR3(DXR3),
+		.DXR2(DXR2),
+		.DXR1(DXR1),
+		.DXR0(DXR0),
+		.DXG3(DXG3),
+		.DXG2(DXG2),
+		.DXG1(DXG1),
+		.DXG0(DXG0),
+		.DXB3(DXB3),
+		.DXB2(DXB2),
+		.DXB1(DXB1),
+		.DXB0(DXB0),
+		.DXZ3(DXZ3),
+		.DXZ2(DXZ2),
+		.DXZ1(DXZ1),
+		.DXZ0(DXZ0),
+		.KOS1(KOS1),
+		.BRHF_AL(BRHF_AL),
+		.BGHF_AL(BGHF_AL),
+		.BBHF_AL(BBHF_AL),
+		.AY_AL(AY_AL),
+		.PRIB_AL(PRIB_AL),
+		.BVR(BVR),
+		.BVG(BVG),
+		.BVB(BVB),
+		.BY_AL(BY_AL),
+		.LD_SFT_AL(LD_SFT_AL),
+		
+		/* -> External Shared Logic */
+		.IC117_12_TO_IC111_1_AND_IC112_1_AND_IC113_1_AND_IC114_1(IC117_12_TO_IC111_1_AND_IC112_1_AND_IC113_1_AND_IC114_1),
+        .IC139_6_TO_IC111_15_AND_IC112_15_AND_IC113_15_AND_IC114_15(IC139_6_TO_IC111_15_AND_IC112_15_AND_IC113_15_AND_IC114_15),
+		.IC139_3_TO_IC141_2_AND_IC141_3_AND_IC141_11(IC139_3_TO_IC141_2_AND_IC141_3_AND_IC141_11)
+	);
+
+	/* -> Picture ROM */
+	video_picture_rom picture_rom(
+		.BSEL0(BSEL0),
+		.BSEL2(BSEL2),
+		.MR_AL(CN1[38]),
+		.CSC000_AL(CSC000_AL),
+		.EXCT_RB(EXCT_RB),
+		.ABP12(ABP12),
+		.ABP11(ABP11),
+		.ABP10(ABP10),
+		.ABP9(ABP9),
+		.ABP8(ABP8),
+		.ABP7(ABP7),
+		.ABP6(ABP6),
+		.ABP5(ABP5),
+		.ABP4(ABP4),
+		.ABP3(ABP3),
+		.ABP2(ABP2),
+		.ABP1(ABP1),
+		.ABP0(ABP0),
+		.DPZ3(DPZ3),
+		.DPZ2(DPZ2),
+		.DPZ1(DPZ1),
+		.DPZ0(DPZ0),
+		.DPR3(DPR3),
+		.DPR2(DPR2),
+		.DPR1(DPR1),
+		.DPR0(DPR0),
+		.DPG3(DPG3),
+		.DPG2(DPG2),
+		.DPG1(DPG1),
+		.DPG0(DPG0),
+		.DPB3(DPB3),
+		.DPB2(DPB2),
+		.DPB1(DPB1),
+		.DPB0(DPB0),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		
+		/* -> External Shared Logic */
+		.IC89_3_TO_IC39_1_AND_IC40_1(IC89_3_TO_IC39_1_AND_IC40_1),
+		.IC90_8_TO_IC89_1_AND_IC91_5(IC90_8_TO_IC89_1_AND_IC91_5),
+		.IC91_2_TO_IC53_18_AND_IC53_20_AND_IC77_18_AND_IC77_20(IC91_2_TO_IC53_18_AND_IC53_20_AND_IC77_18_AND_IC77_20),
+		.IC91_6_TO_IC89_12(IC91_6_TO_IC89_12)
+	);
+
+	/* -> Picture ROM Address Selector */
+	video_picture_rom_address_selector picture_rom_address_selector(
+		.EXCT_RB(EXCT_RB),
+		.EXCT_SB(EXCT_SB),
+		.RDH_AL(CN1[3]),
+		.RDL_AL(CN1[2]),
+		.K1_AL(K1_AL),
+		.K2(K2),
+		.AB12(CN1[33]),
+		.AB11(CN1[32]),
+		.AB10(CN1[31]),
+		.AB9(CN1[30]),
+		.AB8(CN1[29]),
+		.AB7(CN1[28]),
+		.AB6(CN1[27]),
+		.AB5(CN1[26]),
+		.AB4(CN1[25]),
+		.AB3(CN1[24]),
+		.AB2(CN1[23]),
+		.AB1(CN1[22]),
+		.AB0(CN1[21]),
+		.DB7(CN1[20]),
+		.DB6(CN1[19]),
+		.DB5(CN1[18]),
+		.DB4(CN1[17]),
+		.DB3(CN1[16]),
+		.DB2(CN1[15]),
+		.DB1(CN1[14]),
+		.DB0(CN1[13]),
+		.ABP12(ABP12),
+		.ABP11(ABP11),
+		.ABP10(ABP10),
+		.ABP9(ABP9),
+		.ABP8(ABP8),
+		.ABP7(ABP7),
+		.ABP6(ABP6),
+		.ABP5(ABP5),
+		.ABP4(ABP4),
+		.ABP3(ABP3),
+		.ABP2(ABP2),
+		.ABP1(ABP1),
+		.ABP0(ABP0)
+	);
+
+	/* -> Video Playfield */
+	video_playfield playfield(
+		.SEL_I_II_AL_A(SEL_I_II_AL_A),
+		.AV6_TICK_AL(AV6_TICK_AL),
+		.ENA(ENA),
+		.SFT_AL(SFT_AL),
+		.ACAS0_AL(ACAS0_AL),
+		.ACAS1_AL(ACAS1_AL),
+		.ARAS0_AL(ARAS0_AL),
+		.ARAS1_AL(ARAS1_AL),
+		.AWE0_AL(AWE0_AL),
+		.AWE1_AL(AWE1_AL),
+		.XXA6(XXA6),
+		.XXA5(XXA5),
+		.XXA4(XXA4),
+		.XXA3(XXA3),
+		.XXA2(XXA2),
+		.XXA1(XXA1),
+		.XXA0(XXA0),
+		.DXR3(DXR3),
+		.DXR2(DXR2),
+		.DXR1(DXR1),
+		.DXR0(DXR0),
+		.DXG3(DXG3),
+		.DXG2(DXG2),
+		.DXG1(DXG1),
+		.DXG0(DXG0),
+		.DXB3(DXB3),
+		.DXB2(DXB2),
+		.DXB1(DXB1),
+		.DXB0(DXB0),
+		.DXZ3(DXZ3),
+		.DXZ2(DXZ2),
+		.DXZ1(DXZ1),
+		.DXZ0(DXZ0),
+		.KOS1(KOS1),
+		.ARHF_AL(ARHF_AL),
+		.AGHF_AL(AGHF_AL),
+		.ABHF_AL(ABHF_AL),
+		.BY_AL(BY_AL),
+		.PRIA_AL(PRIA_AL),
+		.AVR(AVR),
+		.AVG(AVG),
+		.AVB(AVB),
+		.AY_AL(AY_AL),
+		.LD_SFT_AL(LD_SFT_AL),
+		
+		/* -> External Shared Logic */
+		.IC117_10_TO_IC107_1_AND_IC108_1_AND_IC109_1_AND_IC110_1(IC117_10_TO_IC107_1_AND_IC108_1_AND_IC109_1_AND_IC110_1),
+		.IC139_8_TO_IC107_15_AND_IC108_15_AND_IC109_15_AND_IC110_15(IC139_8_TO_IC107_15_AND_IC108_15_AND_IC109_15_AND_IC110_15),
+		.IC139_11_TO_IC137_2_AND_IC137_3_AND_IC137_11(IC139_11_TO_IC137_2_AND_IC137_3_AND_IC137_11)
+	);
+	
+	/* -> Video Output */
+	video_video_output video_out(
+		.AVR(AVR),
+		.BVR(BVR),
+		.AVG(AVG),
+		.BVG(BVG),
+		.AVB(AVB),
+		.BVB(BVB),
+		.TRGA_AL(TRGA_AL),
+		.VSYNC_AL(VSYNC_AL),
+		.RED_OUT(CN4[1]),
+		.GREEN_OUT(CN4[2]),
+		.BLUE_OUT(CN4[3]),
+		.SYNC_OUT(CN4[4]),
+		
+		/* -> External Shared Logic */
+		.IC118_8_TO_IC135_12_AND_IC135_13(IC118_8_TO_IC135_12_AND_IC135_13)
+	);
+
+
+	/* -> Internal Shared Logic */
+	/* IC12 - LS157 */
+	ls157 IC12(._AB(EXCT_SB), ._G(1'b0), ._1A(CN1[33]), ._1B(IC1_14_TO_IC12_3), ._1Y(ABX12), ._2A(CN1[34]), ._2B(IC1_13_TO_IC12_6), ._2Y(ABX13), ._3A(CN1[33]), ._3B(IC41_5_TO_IC12_10), ._3Y(ABP12), ._4A(), ._4B(), ._4Y());
+
+	/* IC17 - LS04 */
+	ls04 IC17(._1A(IC7_11_TO_IC7_12_AND_IC17_1), ._1Y(IC17_2_TO_IC17_13), ._2A(IC6_9_TO_IC17_3), ._2Y(K2_AL), ._3A(AV14), ._3Y(IC17_6_TO_IC29_11_AND_IC31_11), ._4A(K2_AL), ._4Y(IC17_8_TO_IC42_2_AND_IC43_2_AND_IC44_2_AND_IC45_2_AND_IC46_2_AND_IC47_2_AND_IC48_2_AND_IC49_2), ._5A(IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1), ._5Y(K1_AL), ._6A(IC17_2_TO_IC17_13), ._6Y(SFT_AL));
+
+	/* IC19 - LS00 */
+	ls00 IC19(._1A(LDL_AL), ._1B(LDL_AL), ._1Y(IC19_3_TO_IC1_7_AND_IC2_7), ._2A(IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1), ._2B(IC6_5_TO_IC19_5_AND_IC19_10), ._2Y(RAS), ._3A(IC6_5_TO_IC19_5_AND_IC19_10), ._3B(IC7_2_TO_IC6_11_AND_IC19_9), ._3Y(XG), ._4A(IC28_5_TO_IC19_13_AND_IC27_1_AND_IC27_13), ._4B(IC28_8_TO_IC19_12_AND_IC27_2_AND_IC27_10_AND_IC27_12), ._4Y(EXCT_AL));
+
+	/* IC20 - LS08 */
+	ls08 IC20(._1A(AV6_TICK), ._1B(AV4), ._1Y(IC20_3_TO_IC23_2_AND_IC23_12), ._2A(AV8), ._2B(AV14), ._2Y(IC20_6_TO_IC11_1_AND_IC21_2_AND_IC21_12), ._3A(IC9_9_TO_IC20_9), ._3B(IC11_4_TO_IC20_10), ._3Y(LD_SFT_AL), ._4A(IC118_6_TO_IC20_12), ._4B(IC133_6_TO_IC20_13), ._4Y(CN1[41]));
+
+	/* IC30 - LS86 */
+	ls86 IC30(._1A(IC7_7_TO_IC6_2_AND_IC7_4_AND_IC7_13_AND_IC17_11_AND_IC19_4_AND_IC30_1), ._1B(IC7_10_TO_IC5_12_AND_IC30_2), ._1Y(IC30_3_TO_IC7_5), ._2A(AV4), ._2B(IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13), ._2Y(AVAX4), ._3A(AV5), ._3B(IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13), ._3Y(AVAX5), ._4A(SEL_I_II_AL_A), ._4B(1'b1), ._4Y(IC30_11_TO_IC30_5_AND_IC30_10_AND_IC32_2_AND_IC32_5_AND_IC32_10_AND_IC32_13));
+
+	/* IC40 - LS367 */
+	ls367 IC40(._1G(IC89_3_TO_IC39_1_AND_IC40_1), ._1A1(DPB2), ._1Y1(CN1[15]), ._1A2(DPB1), ._1Y2(CN1[14]), ._1A3(DPB0), ._1Y3(CN1[13]), ._1A4(DPB3), ._1Y4(CN1[16]), ._2G(1'b0), ._2A1(1'b0), ._2Y1(), ._2A2(EXCT_SB), ._2Y2(EXCT));
+
+	/* IC41 - LS74 */
+	ls74 IC41(._1CLR(1'b1), ._1D(CN1[17]), ._1CLK(CN1[3]), ._1PRE(1'b1), ._1Q(IC41_5_TO_IC12_10), ._1QINV(), ._2CLR(1'b1), ._2D(1'b0), ._2CLK(K2), ._2PRE(IC27_8_TO_IC41_10), ._2Q(IC41_9_TO_IC28_1), ._2QINV());
+
+	/* IC90 - LS32 */
+	ls32 IC90(._1A(IC131_12_TO_IC90_1_AND_IC131_3), ._1B(CN1[37]), ._1Y(IC90_3_TO_IC91_13), ._2A(SEL_I_II_AL_A), ._2B(TRGA_AL), ._2Y(IC90_6_TO_IC31_4), ._3A(BSEL0), ._3B(BSEL2), ._3Y(IC90_8_TO_IC89_1_AND_IC91_5), ._4A(IC102_15_TO_IC90_12_AND_IC116_10), ._4B(IC28_9_TO_IC90_13), ._4Y(IC90_11_TO_IC118_12));
+
+	/* IC91 - LS04 */
+	ls04 IC91(._1A(ABP12), ._1Y(IC91_2_TO_IC53_18_AND_IC53_20_AND_IC77_18_AND_IC77_20), ._2A(1'b1), ._2Y(), ._3A(IC90_8_TO_IC89_1_AND_IC91_5), ._3Y(IC91_6_TO_IC89_12), ._4A(IC104_6_TO_IC91_9), ._4Y(IC91_8_TO_IC104_12), ._5A(IC104_8_TO_IC91_11), ._5Y(IC91_10_TO_IC104_1), ._6A(IC90_3_TO_IC91_13), ._6Y(IC91_12_TO_IC118_4_AND_IC133_11));
+
+	/* IC117 - LS04 */
+	ls04 IC117(._1A(CN1[35]), ._1Y(IC117_2_TO_IC131_1), ._2A(CN1[37]), ._2Y(IC117_3_TO_IC133_4), ._3A(CN1[39]), ._3Y(IC117_6_TO_IC133_9), ._4A(CN1[34]), ._4Y(IC117_8_TO_IC131_11), ._5A(SEL_I_II_AL_A), ._5Y(IC117_10_TO_IC107_1_AND_IC108_1_AND_IC109_1_AND_IC110_1), ._6A(SEL_I_II_AL_B), ._6Y(IC117_12_TO_IC111_1_AND_IC112_1_AND_IC113_1_AND_IC114_1));
+
+	/* IC118 - LS00 */
+	ls00 IC118(._1A(TRGA_AL), ._1B(SEL_I_II_AL_A), ._1Y(IC118_3_TO_IC31_5), ._2A(IC91_12_TO_IC118_4_AND_IC133_11), ._2B(IC132_5_TO_IC118_5_AND_IC133_10), ._2Y(IC118_6_TO_IC20_12), ._3A(VSYNC_AL), ._3B(TRGA_AL), ._3Y(IC118_8_TO_IC135_12_AND_IC135_13), ._4A(K2), ._4B(IC90_11_TO_IC118_12), ._4Y(LDL_AL));
+
+	/* IC139 - LS00 */
+	ls00 IC139(._1A(PRIB_AL), ._1B(AY_AL), ._1Y(IC139_3_TO_IC141_2_AND_IC141_3_AND_IC141_11), ._2A(ENB), ._2B(AV6_TICK_AL), ._2Y(IC139_6_TO_IC111_15_AND_IC112_15_AND_IC113_15_AND_IC114_15), ._3A(ENA), ._3B(AV6_TICK_AL), ._3Y(IC139_8_TO_IC107_15_AND_IC108_15_AND_IC109_15_AND_IC110_15), ._4A(BY_AL), ._4B(PRIA_AL), ._4Y(IC139_11_TO_IC137_2_AND_IC137_3_AND_IC137_11));
+
+endmodule

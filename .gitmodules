@@ -1,0 +1,6 @@
+[submodule "rtl/core/A-Z80"]
+	path = rtl/core/A-Z80
+	url = https://github.com/gdevic/A-Z80
+[submodule "rtl/core/ay-3-8910_reverse_engineered"]
+	path = rtl/core/ay-3-8910_reverse_engineered
+	url = https://github.com/lvd2/ay-3-8910_reverse_engineered/
